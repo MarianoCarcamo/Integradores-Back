@@ -51,8 +51,17 @@ El servidor está vinculado a la ip local "127.0.0.1" en el puerto "8080"
     -   quantity: Number, indica la cantidad de productos a incluir
 
     Al agregar un producto dos o mas veces, el campo quantity se incrementa.
-    
+
+
+### Vistas
+
+#### **/**
+Lista todos los productos de la base de datos
+
 #### **/realtimeproducts**
-- Metodo GET: Lista los productos en la base de datos en tiempo real con el uso de webSockets
+Lista los productos de la base de datos en tiempo real con el uso de webSockets
+
+#### **/chatroom**
+Sala de chat para multiples usuarios
 
 El flujo de informacion se realiza mediante archivos json y como cliente se recomienda utilizar Postman

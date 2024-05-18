@@ -69,7 +69,7 @@ router.delete('/:productId', (req, res) => {
             productsListUpdate(req,res)
         })
         .catch((error) => {
-            res.status(404).json({ ERROR: `${(error, message)}` })
+            res.status(404).json({ ERROR: `${(error.message)}` })
         })
 })
 

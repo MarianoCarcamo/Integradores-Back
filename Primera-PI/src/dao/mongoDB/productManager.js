@@ -52,12 +52,16 @@ class ProductManager {
         }
     }
 
-    async upDateProduct(id, producto) {
+    async upDateProduct(id, product) {
         try {
-            if (producto.id !== undefined){
+            if (product.id !== undefined){
                 throw new Error('No se permite actualizar el id')
             }
-            let updated_product = this.updateByField( await productModel.findById({_id:id}), producto)
+            const old_product = await productModel.findById({_id:id})
+            if (!old_product) {
+                throw productNotFound
+            }
+            const updated_product = this.updateByField( old_product, product)
             await productModel.updateOne({_id: id}, updated_product)
         } catch (error) {
             throw error

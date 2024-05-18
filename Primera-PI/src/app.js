@@ -6,7 +6,9 @@ import __dirname from './utils.js'
 import productsRouter from './routes/products.router.js'
 import cartsRouter from './routes/carts.router.js'
 import indexRouter from './routes/index.router.js'
+import chatRouter from './routes/chat.router.js'
 import realTimeProductsRouter from './routes/realTimeProducts.router.js'
+import chatSocket from './service/chatSocket.service.js'
 
 const app = express()
 const PORT = 8080
@@ -27,6 +29,9 @@ mongoose.connect("mongodb+srv://Mariano:123321@cluster0.jjfvoiv.mongodb.net/ecom
 .catch(error => console.error("Error en la conexion", error))
 
 app.use('/', indexRouter)
+app.use('/chatroom', chatRouter)
 app.use('/realTimeProducts', realTimeProductsRouter)
 app.use('/api/products', productsRouter)
 app.use('/api/carts', cartsRouter)
+
+chatSocket(socketServer)

@@ -6,7 +6,7 @@ const cartCollection = "carts"
 //Declara el esquema
 const cartSchema = new mongoose.Schema({
     "products": [{
-        "product": Number,
+        "product": String,
         "quantity": Number
     }]
 })
