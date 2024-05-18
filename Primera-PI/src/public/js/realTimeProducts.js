@@ -5,11 +5,14 @@ socket.on('products', products =>{
     productsContainer.innerHTML = ""
     products.forEach(product => {
         productsContainer.innerHTML = productsContainer.innerHTML + `
-            <h2>${product.title}</h2>
-            <div>
-                <p>${product.description}</p>
-                <p>Precio: $${product.price}</p>
-                <p>Stock: ${product.stock}</p>
+            <div class="col card m-3" style="width: 18rem;">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">${product.title}</h5>
+                    <p class="card-text fw-semibold">${product.description}</p>
+                    <p class="card-text">Precio: $${product.price}</p>
+                    <p class="card-text">Stock: ${product.stock}</p>
+                </div>
             </div>
         `
     });

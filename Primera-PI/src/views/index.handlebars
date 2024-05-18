@@ -1,13 +1,16 @@
-<div>
-    <h1>Productos agregados</h1>
-    {{#each products}}
-        <div>
-            <h2>{{this.title}}</h2>
-            <div>
-                <p>{{this.description}}</p>
-                <p>Precio: ${{this.price}}</p>
-                <p>Stock: {{this.stock}}</p>
+<div class="container text-center">
+    <h1 class="fw-bold fst-italic">Productos agregados</h1>
+    <div class="row row-cols-3">
+        {{#each products}}
+            <div class="col card m-3" style="width: 18rem;">
+                <img src="..." class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">{{this.title}}</h5>
+                    <p class="card-text fw-semibold">{{this.description}}</p>
+                    <p class="card-text">Precio: ${{this.price}}</p>
+                    <p class="card-text">Stock: {{this.stock}}</p>
+                </div>
             </div>
-        </div>
-    {{/each}}
+        {{/each}}
+    </div>
 </div>

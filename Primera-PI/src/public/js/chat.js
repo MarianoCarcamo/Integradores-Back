@@ -32,7 +32,7 @@ socket.on("messageLogs", data => {
     let log = document.getElementById("messageLogs")
     let messages = ""
     data.forEach(message => {
-        messages = messages + `${message.user}: ${message.message}</br>`
+        messages = `${message.user}: ${message.message}</br>` + messages
     })
     log.innerHTML = messages
 })
