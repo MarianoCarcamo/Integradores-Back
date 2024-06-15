@@ -11,7 +11,8 @@ const productManager = new ProductManager()
 class CartManager {
     async addCart() {
         try {
-            await cartModel.create({})
+            const result = await cartModel.create({})
+            return result
         } catch (error) {
             throw error
         }

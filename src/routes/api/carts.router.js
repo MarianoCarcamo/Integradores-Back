@@ -25,9 +25,7 @@ router.post('/:cartId/product/:productId', (req, res) => {
     const prodId = req.params.productId
     cartManager
         .addProductInCart(cartId, prodId)
-        .then(() =>
-            res.redirect(`/carts/${cartId}`)
-        )
+        .then(() => res.redirect(`/carts/${cartId}`))
         .catch((error) => {
             res.status(400).json({ ERROR: `${error.message}` })
         })
@@ -36,8 +34,8 @@ router.post('/:cartId/product/:productId', (req, res) => {
 router.post('/', (req, res) => {
     cartManager
         .addCart()
-        .then(() => {
-            res.json({ message: 'Carrito creado con exito' })
+        .then((result) => {
+            res.json({ message: 'Carrito creado con exito', result })
         })
         .catch((error) => {
             res.status(400).json({ ERROR: `${error.message}` })
