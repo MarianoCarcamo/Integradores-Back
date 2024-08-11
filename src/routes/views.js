@@ -1,11 +1,13 @@
 import { Router } from 'express'
-import ProductManager from '../dao/mongoDB/productManager.js'
-import CartManager from '../dao/mongoDB/cartManager.js'
+import * as productManager from '../repository/products.repository.js'
+import * as cartManager from '../repository/carts.repository.js'
 import { isAuthenticated, isNotAuthenticated } from '../middleware/auth.js'
 
 const router = Router()
-const productManager = new ProductManager()
-const cartManager = new CartManager()
+
+router.get('/', async (req, res) => {
+    res.redirect('/login')
+})
 
 router.get('/products', async (req, res) => {
     try {
@@ -30,7 +32,7 @@ router.get('/carts/:cartId', async (req, res) => {
         const { cartId } = req.params
         let result = await cartManager.getProductsInCart(cartId)
         result = result.map((element) => element.toObject())
-        res.render('cartProductsView', { result: result })
+        res.render('cartProductsView', { result: result, cartId })
     } catch (error) {
         throw error
     }
@@ -46,6 +48,18 @@ router.get('/register', isNotAuthenticated, (req, res) => {
 
 router.get('/profile', isAuthenticated, (req, res) => {
     res.render('profileView', { user: req.session.user })
+})
+
+router.get('/chatroom', (req, res) => {
+    res.render('chatView', {})
+})
+
+router.get('/recovery', async (req, res) => {
+    res.render('recoveryView', {})
+})
+
+router.get('/recovery-password', async (req, res) => {
+    res.render('passwordRecoveryView', {})
 })
 
 export default router

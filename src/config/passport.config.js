@@ -1,11 +1,9 @@
 import passport from 'passport'
 import local from 'passport-local'
 import GitHubStrategy from 'passport-github2'
-import dotenv from 'dotenv'
-import userService from '../dao/models/user.model.js'
+import config from './config.js'
+import * as userService from '../dao/mongoDB/userData.js'
 import { createHash, isValidPassword } from '../utils.js'
-
-dotenv.config()
 
 const ADMIN = {
     _id: 0,
@@ -25,16 +23,16 @@ const initializePassport = () => {
         'github',
         new GitHubStrategy(
             {
-                clientID: process.env.CLIENT_ID,
-                clientSecret: process.env.CLIENT_SECRET,
+                clientID: config.clientId,
+                clientSecret: config.clientSecret,
                 callbackURL:
                     'http://localhost:8080/api/sessions/githubcallback',
             },
             async (accessToken, refreshToken, profile, done) => {
                 try {
-                    let user = await userService.findOne({
-                        email: profile._json.email,
-                    })
+                    let user = await userService.findUserByEmail(
+                        profile._json.email
+                    )
                     if (!user) {
                         let newUser = {
                             first_name: profile._json.name,
@@ -45,7 +43,7 @@ const initializePassport = () => {
                         })
                             .then((res) => res.json())
                             .then((data) => (newUser.cart = data.result._id))
-                        let result = await userService.create(newUser)
+                        let result = await userService.createUser(newUser)
                         done(null, result)
                     } else {
                         done(null, user)
@@ -65,7 +63,7 @@ const initializePassport = () => {
             async (req, username, password, done) => {
                 const { first_name, last_name, email, age } = req.body
                 try {
-                    let user = await userService.findOne({ email: username })
+                    let user = await userService.findUserByEmail(username)
                     if (user) {
                         console.log('El usuario ya existe')
                         return done(null, false)
@@ -82,7 +80,7 @@ const initializePassport = () => {
                     })
                         .then((res) => res.json())
                         .then((data) => (newUser.cart = data.result._id))
-                    let result = await userService.create(newUser)
+                    let result = await userService.createUser(newUser)
                     return done(null, result)
                 } catch (error) {
                     return done('Error al obtener el usuario' + error)
@@ -99,7 +97,7 @@ const initializePassport = () => {
         if (id === ADMIN._id) {
             done(null, ADMIN)
         } else {
-            done(null, await userService.findById(id))
+            done(null, await userService.findUserById(id))
         }
     })
 
@@ -111,13 +109,35 @@ const initializePassport = () => {
                 try {
                     if (username === ADMIN.email && password === ADMIN.password)
                         return done(null, ADMIN)
-                    const user = await userService.findOne({ email: username })
+                    const user = await userService.findUserByEmail(username)
                     if (!user) {
                         return done(null, false)
                     }
                     if (!isValidPassword(user, password))
                         return done(null, false)
                     return done(null, user)
+                } catch (error) {
+                    done(error)
+                }
+            }
+        )
+    )
+
+    passport.use(
+        'recovery',
+        new localStrategy(
+            { usernameField: 'email' },
+            async (username, password, done) => {
+                try {
+                    const user = await userService.findUserByEmail(username)
+                    if (!user) {
+                        return done(null, false)
+                    }
+                    if (isValidPassword(user, password))
+                        return done(null, false)
+                    user.password = createHash(password)
+                    let result = await userService.updatePassword(user)
+                    return done(null, result)
                 } catch (error) {
                     done(error)
                 }
