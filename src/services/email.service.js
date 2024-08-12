@@ -1,5 +1,6 @@
 import nodeMailer from 'nodemailer'
 import config from '../config/config.js'
+import { findUserByEmail } from '../dao/mongoDB/userData.js'
 
 //Agregar conexion con el sericio de correo electrónico
 const transport = nodeMailer.createTransport({
@@ -29,12 +30,14 @@ export async function sendTicket(ticket) {
 }
 
 export async function sendRecovery(clientEmail) {
+    const user = await findUserByEmail(clientEmail)
+    if (!user) throw error;
     await transport.sendMail({
         from: config.email,
         to: clientEmail,
         subject: 'Mail de restablecimiento de contraseña',
         html: `
-        <h3>Haga click <a href="http://localhost:${config.port}/recovery-password">aquí</a> para restablecer su contraseña</h3>
+        <h3>Haga click <a href="http://localhost:${config.port}/recovery-password/${user._id}">aquí</a> para restablecer su contraseña</h3>
         `,
         attachments: [],
     })

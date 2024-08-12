@@ -40,8 +40,8 @@ router.get(
 router.post('/recovery', controller.recoveryEmail)
 
 router.post(
-    '/recovery-password',
-    passport.authenticate('recovery', { failureRedirect: '/login' }),
+    '/recovery-password/:uid',
+    passport.authenticate('recovery', { failureRedirect: '/failregister' }),
     controller.recoveryPassword
 )
 

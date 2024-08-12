@@ -55,8 +55,12 @@ export async function githubcallback(req, res) {
 
 export async function recoveryEmail(req, res) {
     const { email } = req.body
-    sendRecovery(email)
-    res.redirect('/login')
+    try{
+        sendRecovery(email)
+        res.redirect('/login')
+    } catch (error) {
+        res.send({status: "ERROR", message: "Direccion de correo electrónico no registrada"})
+    }
 }
 
 export async function recoveryPassword(req, res) {

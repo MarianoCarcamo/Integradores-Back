@@ -58,8 +58,9 @@ router.get('/recovery', async (req, res) => {
     res.render('recoveryView', {})
 })
 
-router.get('/recovery-password', async (req, res) => {
-    res.render('passwordRecoveryView', {})
+router.get('/recovery-password/:uid', async (req, res) => {
+    const { uid } = req.params
+    res.render('passwordRecoveryView', {uid})
 })
 
 export default router
