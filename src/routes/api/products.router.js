@@ -6,7 +6,7 @@ const router = express.Router()
 
 // ENDPOINTS
 router.get('/', controller.getAllProducts)
-router.get('/:idProduct', controller.getProductById)
+router.get('/:productId', controller.getProductById)
 router.post('/', isAdmin, controller.createProduct)
 router.put('/:productId', isAdmin, controller.updateProduct)
 router.delete('/:productId', isAdmin, controller.deleteProduct)

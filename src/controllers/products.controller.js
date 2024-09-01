@@ -13,7 +13,7 @@ export async function getAllProducts(req, res) {
 }
 
 export async function getProductById(req, res) {
-    const pid = req.params.idProduct
+    const pid = req.params.productId
     try {
         const product = await productManager.getProductById(pid)
         res.send(product)
@@ -29,7 +29,7 @@ export async function createProduct(req, res) {
     const newProduct = req.body
     try {
         const result = await productManager.createProduct(newProduct)
-        res.send({ result: 'success', payload: result })
+        res.send({ status: 'success', payload: result })
     } catch (error) {
         // res.status(400).json({ ERROR: `${error.message}` })
         throw error

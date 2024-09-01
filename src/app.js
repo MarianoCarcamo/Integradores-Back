@@ -4,6 +4,8 @@ import handlebars from 'express-handlebars'
 import mongoose from 'mongoose'
 import MongoStore from 'connect-mongo'
 import passport from 'passport'
+import SwaggerUiExpress from 'swagger-ui-express'
+import swaggerJsdoc from 'swagger-jsdoc'
 import { Server } from 'socket.io'
 import __dirname from './utils.js'
 import config from './config/config.js'
@@ -25,6 +27,17 @@ const httpServer = app.listen(PORT, () => {
     console.log(`Server's up and running on port ${PORT}`)
 })
 const socketServer = new Server(httpServer)
+const swaggerOptions = {
+    definition: {
+        openapi: '3.0.1',
+        info: {
+            title: "Documentacion del servidor - Cárcamo Mariano",
+            description: "API pensada para el manejo elemental de un sitio web de E-commerce"
+        }
+    },
+    apis: [`src/docs/**/*.yaml`]
+}
+const specs = swaggerJsdoc(swaggerOptions)
 
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -55,13 +68,13 @@ app.use(passport.session())
 
 app.use(addLogger)
 
+app.use('/apidocs',SwaggerUiExpress.serve, SwaggerUiExpress.setup(specs))
 app.use('/api/sessions', sessionRouter)
 app.use('/api/users', usersRouter)
 app.use('/api/products', productsRouter)
 app.use('/api/carts', cartsRouter)
 app.use('/mockingproducts', mockRouter)
 app.use('/', viewsRouter)
-
 app.use('/loggertest', (req, res) => {
     req.logger.debug('DEBUG')
     req.logger.http('HTTP')

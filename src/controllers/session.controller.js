@@ -22,12 +22,14 @@ export async function login(req, res) {
             .send({ status: 'error', error: 'Datos incompletos' })
     try {
         req.session.user = {
+            _id: req.user._id,
             first_name: req.user.first_name,
             last_name: req.user.last_name,
             email: req.user.email,
             age: req.user.age,
             rol: req.user.rol,
             cart: req.user.cart,
+            documents: req.user.documents
         }
         res.redirect('/products')
     } catch (err) {

@@ -115,6 +115,7 @@ const initializePassport = () => {
                     }
                     if (!isValidPassword(user, password))
                         return done(null, false)
+                    await userService.updateLastConnection(user)
                     return done(null, user)
                 } catch (error) {
                     done(error)

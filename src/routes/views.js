@@ -47,7 +47,10 @@ router.get('/register', isNotAuthenticated, (req, res) => {
 })
 
 router.get('/profile', isAuthenticated, (req, res) => {
-    res.render('profileView', { user: req.session.user })
+    const user = req.session.user
+    const premium = (user.rol == "premium")? true : false 
+    const completeDocs = (user.documents.length >= 3)? true : false
+    res.render('profileView', { user, premium , completeDocs })
 })
 
 router.get('/chatroom', (req, res) => {
@@ -61,6 +64,11 @@ router.get('/recovery', async (req, res) => {
 router.get('/recovery-password/:uid', async (req, res) => {
     const { uid } = req.params
     res.render('passwordRecoveryView', {uid})
+})
+
+router.get('/upload-documents', async (req, res) => {
+    const uid = req.session.user._id
+    res.render('uploadDocumentsView', {uid})
 })
 
 export default router
